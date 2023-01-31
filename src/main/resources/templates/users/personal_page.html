@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница пользователя</title>
+</head>
+<body>
+
+<!--<table>-->
+<!--    <tr>-->
+<!--        <td>Фамилия</td>-->
+<!--        <td th:text="${user.surname}"/>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>Имя</td>-->
+<!--        <td th:text="${user.name}"/>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>Возраст</td>-->
+<!--        <td th:text="${user.age}"/>-->
+<!--    </tr>-->
+<!--</table>-->
+
+<p th:text="'Фамилия: ' + ${user.surname}"/>
+<p th:text="'Имя: ' + ${user.name}"/>
+<p th:text="'Возраст: ' + ${user.age}"/>
+<br>
+<h3> <a href="/users">Вернуться к списку пользователей</a> </h3>
+
+</body>
+</html>

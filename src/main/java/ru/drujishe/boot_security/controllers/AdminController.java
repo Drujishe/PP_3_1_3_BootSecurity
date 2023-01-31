@@ -1,26 +1,27 @@
 package ru.drujishe.boot_security.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.drujishe.boot_security.model.MyUser;
 import ru.drujishe.boot_security.service.UserService;
 
+
 @Controller
-@RequestMapping("/users")
-public class UsersController {
+@RequestMapping("/admin")
+public class AdminController {
 
     private final UserService userService;
 
-    @Autowired
-    public UsersController(UserService userService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
     }
+
 
     @GetMapping
     public String showUsers(Model model) {
         model.addAttribute("users", userService.getAll());
+//        model.addAttribute("users", new ArrayList<MyUser>());
         return "/users/index";
     }
 
@@ -33,7 +34,7 @@ public class UsersController {
     @PostMapping(value = "/new")
     public String createUser(@ModelAttribute("user") MyUser myUser) {
         userService.add(myUser);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/{id}")
@@ -51,12 +52,12 @@ public class UsersController {
     @PostMapping("/{id}")
     public String update(@ModelAttribute("user") MyUser myUser, @PathVariable("id") int id) {
         userService.update(id, myUser);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable("id") int id) {
         userService.delete(id);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 }

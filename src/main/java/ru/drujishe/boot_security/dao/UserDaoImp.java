@@ -1,11 +1,12 @@
 package ru.drujishe.boot_security.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.drujishe.boot_security.model.MyUser;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+
 import java.util.List;
 
 

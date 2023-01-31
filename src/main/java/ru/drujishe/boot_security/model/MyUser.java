@@ -2,7 +2,8 @@ package ru.drujishe.boot_security.model;
 
 
 
-import javax.persistence.*;;
+import jakarta.persistence.*;
+
 
 @Entity
 public class MyUser {
