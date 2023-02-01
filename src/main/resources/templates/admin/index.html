@@ -32,14 +32,14 @@
             <td th:text="${user.surname}"/>
             <td th:text="${user.name}"/>
             <td th:text="${user.age}"/>
-            <td> <a th:href="@{/users/{id}/edit(id=${user.id})}" th:text="Изменить"/> </td>
-            <td> <a th:href="@{/users/{id}/delete(id=${user.id})}" th:text="Удалить"/> </td>
+            <td> <a th:href="@{/admin/{id}/edit(id=${user.id})}" th:text="Изменить"/> </td>
+            <td> <a th:href="@{/admin/{id}/delete(id=${user.id})}" th:text="Удалить"/> </td>
 
         </tr>
     </th:block>
 </table>
 <br>
-<form th:action="@{/users/new}">
+<form th:action="@{/admin/new}">
     <input type="submit" value="Добавить пользователя">
 </form>
 

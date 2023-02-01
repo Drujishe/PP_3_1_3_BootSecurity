@@ -1,35 +1,47 @@
 package ru.drujishe.boot_security.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.stereotype.Service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.drujishe.boot_security.model.MyUser;
+import ru.drujishe.boot_security.repositories.UserRepository;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 
-@Service
+@Repository
 @Transactional
 public class UserDaoImp implements UserDao {
 
     @PersistenceContext
     private EntityManager manager;
 
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserDaoImp(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public void add(MyUser myUser) {
-        manager.persist(myUser);
+        userRepository.save(myUser);
     }
 
     @Override
     public void update(int id, MyUser updatedMyUser) {
-        manager.merge(updatedMyUser);
+        userRepository.deleteById((long) id);
+        userRepository.save(updatedMyUser);
+//        manager.merge(updatedMyUser);
     }
 
     @Override
     public void delete(int id) {
-        manager.remove(getUserById(id));
+        userRepository.deleteById((long) id);
     }
 
     @Override

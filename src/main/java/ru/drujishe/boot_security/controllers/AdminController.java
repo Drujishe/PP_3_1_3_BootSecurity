@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.drujishe.boot_security.model.MyUser;
+import ru.drujishe.boot_security.model.Role;
 import ru.drujishe.boot_security.service.UserService;
 
 
@@ -21,14 +22,14 @@ public class AdminController {
     @GetMapping
     public String showUsers(Model model) {
         model.addAttribute("users", userService.getAll());
-//        model.addAttribute("users", new ArrayList<MyUser>());
-        return "/users/index";
+        return "/admin/index";
     }
 
     @GetMapping(value = "/new")
     public String createPage(Model model) {
         model.addAttribute("user", new MyUser());
-        return "users/new";
+        model.addAttribute("roles", Role.getAllRoles());
+        return "/admin/new";
     }
 
     @PostMapping(value = "/new")
@@ -40,13 +41,14 @@ public class AdminController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
-        return "users/personal_page";
+        return "/admin/personal_page";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
-        return "users/edit";
+        model.addAttribute("roles", Role.getAllRoles());
+        return "/admin/edit";
     }
 
     @PostMapping("/{id}")

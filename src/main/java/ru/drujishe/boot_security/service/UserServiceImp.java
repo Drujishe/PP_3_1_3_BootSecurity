@@ -9,7 +9,6 @@ import ru.drujishe.boot_security.model.MyUser;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserServiceImp implements UserService {
 
     private final UserDao userDao;
