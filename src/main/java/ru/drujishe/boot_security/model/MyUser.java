@@ -1,35 +1,33 @@
 package ru.drujishe.boot_security.model;
 
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "table_users")
-public class MyUser {
+public class MyUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String surname;
     private int age;
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @Column
+    private String username;
+    private String password;
+
+    @ManyToMany(cascade = {CascadeType.MERGE})        // заменил ALL на MERGE -> в ролях не появляются дубликаты
     @JoinTable(
             name = "table_users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Set<Role> roles = new HashSet<>();
-
-    public void addRole(Role role) {
-        roles.add(role);
-        role.getUsers().add(this);
-    }
-
-    public void removeAddress(Role role) {
-        roles.remove(role);
-        role.getUsers().remove(this);
-    }
 
     public void setId(long id) {
         this.id = id;
@@ -38,12 +36,64 @@ public class MyUser {
     public MyUser() {
     }
 
-    public MyUser(long id, String name, String surname, int age, Set<Role> roles) {
+    public MyUser(long id, String name, String surname, int age, Set<Role> roles, String username, String password) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.age = age;
         this.roles = roles;
+        this.username = username;
+        this.password = password;
+    }
+
+    public MyUser(String name, String surname, int age, Set<Role> roles, String username, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.roles = roles;
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getId() {
@@ -91,5 +141,17 @@ public class MyUser {
                 ", age=" + age +
                 ", roles=" + roles +
                 '}';
+    }
+
+    public static UserDetails fromMyUser(MyUser user) {
+        return new User(
+                user.getUsername(),
+                user.getPassword(),
+                user.isEnabled(),
+                user.isAccountNonExpired(),
+                user.isCredentialsNonExpired(),
+                user.isAccountNonLocked(),
+                user.getAuthorities()
+        );
     }
 }

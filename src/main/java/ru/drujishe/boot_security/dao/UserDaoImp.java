@@ -1,12 +1,13 @@
 package ru.drujishe.boot_security.dao;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.drujishe.boot_security.model.MyUser;
-import ru.drujishe.boot_security.repositories.UserRepository;
-
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,28 +21,30 @@ public class UserDaoImp implements UserDao {
     @PersistenceContext
     private EntityManager manager;
 
-    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserDaoImp(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Lazy
+    public UserDaoImp(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public void add(MyUser myUser) {
-        userRepository.save(myUser);
+        myUser.setPassword(passwordEncoder.encode(myUser.getPassword()));
+        manager.persist(myUser);
+    }
+
+
+    @Override
+    public void update(long id, MyUser updatedMyUser) {
+        updatedMyUser.setPassword(passwordEncoder.encode(updatedMyUser.getPassword()));
+        manager.merge(updatedMyUser);
     }
 
     @Override
-    public void update(int id, MyUser updatedMyUser) {
-        userRepository.deleteById((long) id);
-        userRepository.save(updatedMyUser);
-//        manager.merge(updatedMyUser);
-    }
-
-    @Override
-    public void delete(int id) {
-        userRepository.deleteById((long) id);
+    public void delete(long id) {
+        manager.remove(getUserById(id));
     }
 
     @Override
@@ -50,7 +53,14 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public MyUser getUserById(int id) {
-        return manager.createQuery("from MyUser user where user.id = " + id, MyUser.class).getSingleResult();
+    public MyUser getUserById(long id) {
+        return manager.createQuery("from MyUser user where user.id = :id", MyUser.class)
+                .setParameter("id", id).getSingleResult();
+    }
+
+    @Override
+    public MyUser findByUsername(String username) {
+        return manager.createQuery("from MyUser user where user.username = :username", MyUser.class)
+                .setParameter("username", username).getSingleResult();
     }
 }

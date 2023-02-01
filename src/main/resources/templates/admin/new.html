@@ -9,29 +9,35 @@
 <br>
 
 <form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
+    <input th:text="'Логин'" th:placeholder="'логин'" th:field="*{username}">
+    <br>
+    <input th:text="'Пароль'" th:placeholder="'пароль'" type="password" th:field="*{password}">
+    <br>
     <input th:text="'Фамилия'" th:field="*{surname}">
     <br>
     <input th:text="'Имя'" th:field="*{name}">
     <br>
     <input th:text="'Возраст'" th:field="*{age}" type="number">
     <br>
-<!--    <ul>-->
-<!--        <li th:each="role : ${roles}" th:text="${role.roleName}" th:type="checkbox"/>-->
-<!--    </ul>-->
-    <p>
-        <label>Roles:
-            <input type="checkbox" name="roles"
-                   th:each="role : ${roles}"
-                   th:text="${role.roleName}"
-                   th:value="${role.roleId}"
-                   th:field="*{roles}"
-            />
-        </label>
-    </p>
+
+    <th:block th:each="role : ${roles}">
+        <br>
+        <input type="checkbox" name="roles"
+               th:text="${role.roleName}"
+               th:value="${role.roleId}"
+               th:field="*{roles}"
+        />
+    </th:block>
+    <br>
+
     <input type="submit" value="Добавить">
 </form>
 <br>
-<!--<h3 th:href="@{/admin}" th:text="${Вернуться к списку пользователей}"></h3>-->
+<form th:action="@{/user}"> <input th:type="submit" th:value="'Личная страница'"> </form>
+<br>
+<form th:action="@{/admin}"> <input th:type="submit" th:value="'Вернуться к списку пользователей'"> </form>
+<br>
+<form th:action="@{/logout}"> <input th:type="submit" th:value="'Выйти из системы'"> </form>
 
 </body>
 </html>

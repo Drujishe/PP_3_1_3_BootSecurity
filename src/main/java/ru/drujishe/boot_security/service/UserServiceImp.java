@@ -1,6 +1,8 @@
 package ru.drujishe.boot_security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.drujishe.boot_security.dao.UserDao;
@@ -23,12 +25,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void update(int id, MyUser updatedMyUser) {
+    public void update(long id, MyUser updatedMyUser) {
         userDao.update(id, updatedMyUser);
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         userDao.delete(id);
     }
 
@@ -38,7 +40,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public MyUser getUserById(int id) {
+    public MyUser getUserById(long id) {
         return userDao.getUserById(id);
     }
+
+    @Override
+    public MyUser findByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+
 }

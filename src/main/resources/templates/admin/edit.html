@@ -9,6 +9,10 @@
 <h3>Изменить данные пользователя</h3>
 
 <form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
+    <input th:text="'Логин'" th:placeholder="'логин'" th:field="*{username}">
+    <br>
+    <input th:text="'Пароль'" th:placeholder="'пароль'" type="password" th:field="*{password}">
+    <br>
     <input th:text="'Фамилия'" th:field="*{surname}">
     <br>
     <input th:text="'Имя'" th:field="*{name}">
@@ -30,7 +34,11 @@
     <input type="submit" value="Изменить">
 </form>
 <br>
-<h3 th:href="@{/admin}">Вернуться к списку пользователей</h3>
+<form th:action="@{/user}"> <input th:type="submit" th:value="'Личная страница'"> </form>
+<br>
+<form th:action="@{/admin}"> <input th:type="submit" th:value="'Вернуться к списку пользователей'"> </form>
+<br>
+<form th:action="@{/logout}"> <input th:type="submit" th:value="'Выйти из системы'"> </form>
 
 </body>
 </html>

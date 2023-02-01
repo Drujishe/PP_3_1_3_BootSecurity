@@ -5,11 +5,16 @@
     <title>Страница пользователя</title>
 </head>
 <body>
+<p th:text="'Логин: ' + ${user.username}"/>
+<p th:text="'Пароль (закодированный): ' + ${user.password}"/>
+<p th:text="'Роль: '"/>
+<li th:each="role : ${user.roles}" th:text="${role.roleName}"></li>
 <p th:text="'Фамилия: ' + ${user.surname}"/>
 <p th:text="'Имя: ' + ${user.name}"/>
 <p th:text="'Возраст: ' + ${user.age}"/>
+
 <br>
-<h3> <a href="/admin">Вернуться к списку пользователей</a> </h3>
+<form th:action="@{/logout}"><input th:type="submit" th:value="'Выйти из системы'"></form>
 
 </body>
 </html>
