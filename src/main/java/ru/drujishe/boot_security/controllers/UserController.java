@@ -1,10 +1,10 @@
 package ru.drujishe.boot_security.controllers;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.drujishe.boot_security.model.MyUser;
 import ru.drujishe.boot_security.service.UserService;
 
 import java.security.Principal;
@@ -21,8 +21,7 @@ public class UserController {
 
     @GetMapping
     public String show(Principal principal, Model model) {
-        MyUser user = userService.findByUsername(principal.getName());
-        model.addAttribute("user", user);
+        model.addAttribute("person", userService.getPersonByUsername(principal.getName()));
         return "/user/personal_page";
     }
 }

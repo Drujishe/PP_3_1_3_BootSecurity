@@ -1,8 +1,10 @@
-package ru.drujishe.boot_security.service;
+package ru.drujishe.boot_security.utils;
 
 import org.springframework.stereotype.Component;
-import ru.drujishe.boot_security.model.MyUser;
+import ru.drujishe.boot_security.model.Person;
 import ru.drujishe.boot_security.model.Role;
+import ru.drujishe.boot_security.service.RoleService;
+import ru.drujishe.boot_security.service.UserService;
 
 import javax.annotation.PostConstruct;
 import java.util.HashSet;
@@ -26,7 +28,7 @@ public class DbInit {
             roles.add(new Role(0, "ROLE_ADMIN"));
             roles.add(new Role(1, "ROLE_USER"));
             userService.add(
-                    new MyUser("Администратор", "Администраторов", 100,
+                    new Person("Администратор", "Администраторов", 100,
                             roles,
                             "admin",
                             "admin")

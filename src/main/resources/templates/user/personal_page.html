@@ -5,13 +5,13 @@
     <title>Страница пользователя</title>
 </head>
 <body>
-<p th:text="'Логин: ' + ${user.username}"/>
-<p th:text="'Пароль (закодированный): ' + ${user.password}"/>
+<p th:text="'Логин: ' + ${person.username}"/>
+<p th:text="'Пароль (закодированный): ' + ${person.password}"/>
 <p th:text="'Роль: '"/>
-<li th:each="role : ${user.roles}" th:text="${role.roleName}"></li>
-<p th:text="'Фамилия: ' + ${user.surname}"/>
-<p th:text="'Имя: ' + ${user.name}"/>
-<p th:text="'Возраст: ' + ${user.age}"/>
+<li th:each="role : ${person.roles}" th:text="${role.roleName}"></li>
+<p th:text="'Фамилия: ' + ${person.surname}"/>
+<p th:text="'Имя: ' + ${person.name}"/>
+<p th:text="'Возраст: ' + ${person.age}"/>
 
 <br>
 <form th:action="@{/logout}"><input th:type="submit" th:value="'Выйти из системы'"></form>

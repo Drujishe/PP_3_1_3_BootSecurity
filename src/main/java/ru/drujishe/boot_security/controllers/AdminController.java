@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.drujishe.boot_security.model.MyUser;
+import ru.drujishe.boot_security.model.Person;
 import ru.drujishe.boot_security.model.Role;
 import ru.drujishe.boot_security.service.UserService;
 
@@ -13,16 +13,11 @@ import ru.drujishe.boot_security.service.UserService;
 @RequestMapping("/admin")
 public class AdminController {
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
     private UserService userService;
 
     @Autowired
     public AdminController(UserService userService) {
         this.userService = userService;
-
     }
 
     public AdminController() {
@@ -36,14 +31,14 @@ public class AdminController {
 
     @GetMapping(value = "/new")
     public String createPage(Model model) {
-        model.addAttribute("user", new MyUser());
+        model.addAttribute("user", new Person());
         model.addAttribute("roles", Role.getAllRoles());
         return "/admin/new";
     }
 
     @PostMapping(value = "/new")
-    public String createUser(@ModelAttribute("user") MyUser myUser) {
-        userService.add(myUser);
+    public String createUser(@ModelAttribute("user") Person person) {
+        userService.add(person);
         return "redirect:/admin";
     }
 
@@ -55,8 +50,8 @@ public class AdminController {
     }
 
     @PostMapping("/{id}")
-    public String update(@ModelAttribute("user") MyUser myUser, @PathVariable("id") long id) {
-        userService.update(id, myUser);
+    public String update(@ModelAttribute("user") Person person, @PathVariable("id") long id) {
+        userService.update(id, person);
         return "redirect:/admin";
     }
 

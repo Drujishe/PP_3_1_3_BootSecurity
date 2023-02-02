@@ -1,6 +1,7 @@
 package ru.drujishe.boot_security.model;
 
 
+import com.sun.istack.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,15 +10,16 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "table_users")
-public class MyUser implements UserDetails {
+@Table(name = "table_users",
+        uniqueConstraints = {@UniqueConstraint(columnNames = "username")})      // уникальный логин
+public class Person implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String surname;
     private int age;
-    @Column
+    @Column(unique = true)
     private String username;
     private String password;
 
@@ -27,16 +29,17 @@ public class MyUser implements UserDetails {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
+
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public MyUser() {
+    public Person() {
     }
 
-    public MyUser(long id, String name, String surname, int age, Set<Role> roles, String username, String password) {
+    public Person(long id, String name, String surname, int age, Set<Role> roles, String username, String password) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -46,7 +49,7 @@ public class MyUser implements UserDetails {
         this.password = password;
     }
 
-    public MyUser(String name, String surname, int age, Set<Role> roles, String username, String password) {
+    public Person(String name, String surname, int age, Set<Role> roles, String username, String password) {
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -143,15 +146,27 @@ public class MyUser implements UserDetails {
                 '}';
     }
 
-    public static UserDetails fromMyUser(MyUser user) {
+    public static UserDetails fromMyUser(Person person) {
         return new User(
-                user.getUsername(),
-                user.getPassword(),
-                user.isEnabled(),
-                user.isAccountNonExpired(),
-                user.isCredentialsNonExpired(),
-                user.isAccountNonLocked(),
-                user.getAuthorities()
+                person.getUsername(),
+                person.getPassword(),
+                person.isEnabled(),
+                person.isAccountNonExpired(),
+                person.isCredentialsNonExpired(),
+                person.isAccountNonLocked(),
+                person.getAuthorities()
         );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);        // другие параметры не используются, потому что логин уникальный
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        return this.hashCode() == obj.hashCode();
     }
 }

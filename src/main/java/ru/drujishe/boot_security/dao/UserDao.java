@@ -1,21 +1,23 @@
 package ru.drujishe.boot_security.dao;
 
 
-import ru.drujishe.boot_security.model.MyUser;
+import org.springframework.security.core.userdetails.User;
+import ru.drujishe.boot_security.model.Person;
 
 import java.util.List;
 
 public interface UserDao {
 
-    void add(MyUser myUser);
+    void add(Person person);
 
-    void update(long id, MyUser updatedMyUser);
+    void update(long id, Person updatedPerson);
 
     void delete(long id);
 
-    List<MyUser> getAll();
+    List<Person> getAll();
 
-    MyUser getUserById(long id);
+    Person getUserById(long id);
+    Person getPersonByUsername(String username);
 
-    MyUser findByUsername(String username);
+    User findByUsername(String username);
 }

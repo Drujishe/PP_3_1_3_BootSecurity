@@ -2,12 +2,10 @@ package ru.drujishe.boot_security.dao;
 
 
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import ru.drujishe.boot_security.model.MyUser;
+import ru.drujishe.boot_security.model.Person;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,31 +13,19 @@ import java.util.List;
 
 
 @Repository
-@Transactional
 public class UserDaoImp implements UserDao {
 
     @PersistenceContext
     private EntityManager manager;
 
-    private final PasswordEncoder passwordEncoder;
-
-    @Lazy
-    public UserDaoImp(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+    @Override
+    public void add(Person person) {
+        manager.persist(person);
     }
 
-
     @Override
-    public void add(MyUser myUser) {
-        myUser.setPassword(passwordEncoder.encode(myUser.getPassword()));
-        manager.persist(myUser);
-    }
-
-
-    @Override
-    public void update(long id, MyUser updatedMyUser) {
-        updatedMyUser.setPassword(passwordEncoder.encode(updatedMyUser.getPassword()));
-        manager.merge(updatedMyUser);
+    public void update(long id, Person updatedPerson) {
+        manager.merge(updatedPerson);
     }
 
     @Override
@@ -48,19 +34,51 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public List<MyUser> getAll() {
-        return manager.createQuery("from MyUser", MyUser.class).getResultList();
+    public List<Person> getAll() {
+        return manager.createQuery("" +
+                        "select distinct person from Person person " +
+                        "join fetch person.roles roles " +
+                        "order by person.id", Person.class)
+                .getResultList();
     }
 
     @Override
-    public MyUser getUserById(long id) {
-        return manager.createQuery("from MyUser user where user.id = :id", MyUser.class)
-                .setParameter("id", id).getSingleResult();
+    public Person getUserById(long id) {
+        return manager.createQuery("" +
+                        "select distinct person from Person person " +
+                        "join fetch person.roles roles " +
+                        "where person.id = :id", Person.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
-    public MyUser findByUsername(String username) {
-        return manager.createQuery("from MyUser user where user.username = :username", MyUser.class)
-                .setParameter("username", username).getSingleResult();
+    public Person getPersonByUsername(String username) {
+        return manager.createQuery("" +
+                        "select distinct person from Person person " +
+                        "join fetch person.roles roles " +
+                        "where person.username = :username", Person.class)
+                .setParameter("username", username)
+                .getSingleResult();
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        Person person = manager.createQuery("" +
+                        "select distinct person from Person person " +
+                        "join fetch person.roles roles " +
+                        "where person.username = :username", Person.class)
+                .setParameter("username", username)
+                .getSingleResult();
+
+        return new User(
+                person.getUsername(),
+                person.getPassword(),
+                person.isEnabled(),
+                person.isAccountNonExpired(),
+                person.isCredentialsNonExpired(),
+                person.isAccountNonLocked(),
+                person.getAuthorities()
+        );
     }
 }
