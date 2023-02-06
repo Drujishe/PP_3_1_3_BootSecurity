@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить пользователя</title>
+</head>
+<body>
+<h2>Добавить нового пользователя</h2>
+<br>
+
+<form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
+    <input th:text="'Логин'" th:placeholder="'логин'" th:field="*{username}">
+    <br>
+    <input th:text="'Пароль'" th:placeholder="'пароль'" type="password" th:field="*{password}">
+    <br>
+    <input th:text="'Фамилия'" th:field="*{surname}">
+    <br>
+    <input th:text="'Имя'" th:field="*{name}">
+    <br>
+    <input th:text="'Возраст'" th:field="*{age}" type="number">
+    <br>
+
+    <th:block th:each="role : ${roles}">
+        <br>
+        <input type="checkbox" name="roles"
+               th:text="${role.roleName}"
+               th:value="${role.roleId}"
+               th:field="*{roles}"
+        />
+    </th:block>
+    <br>
+
+    <input type="submit" value="Добавить">
+</form>
+<br>
+<form th:action="@{/user}"> <input th:type="submit" th:value="'Личная страница'"> </form>
+<br>
+<form th:action="@{/admin}"> <input th:type="submit" th:value="'Вернуться к списку пользователей'"> </form>
+<br>
+<form th:action="@{/logout}"> <input th:type="submit" th:value="'Выйти из системы'"> </form>
+
+</body>
+</html>

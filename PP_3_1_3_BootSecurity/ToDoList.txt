@@ -1,0 +1,17 @@
+#1 02.02.23
+
+DONE: MyUser лучше избегать использования местоимений в наименовании
+
+DONE: loadUserByUsername лучше возвращать юзера, если хочешь использовать fromMyUser, тогда поменяй на ДТО класс
+
+DONE: DbInit перенеси в пакет util
+
+DONE: В дао слое только достаем данные из БД, всю логику перенести в сервис слой
+
+DONE: @Transactional перенести в сервис слой https://stackoverflow.com/questions/3886909/where-should-transactional-be-placed-service-layer-or-dao
+
+DONE: Для решения проблемы n+1 добавь в запрос join fetch https://habr.com/ru/company/otus/blog/529692/
+
+DONE: Так как используется set необходимо переопределить equals и hashCode, можно использовать только поле id
+
+DONE: В AdminController убрать setUserService, т.к. есть конструктор

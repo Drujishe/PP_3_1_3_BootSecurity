@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+    <style>
+        table {
+            border-collapse: separate;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        th {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+
+<table th:border="1">
+    <caption>Пользователи</caption>
+    <tr>
+        <th>id</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Возраст</th>
+        <th colspan="2">Действие</th>
+    </tr>
+    <th:block th:each="user : ${users}">
+        <tr>
+            <td th:text="${user.id}"/>
+            <td th:text="${user.surname}"/>
+            <td th:text="${user.name}"/>
+            <td th:text="${user.age}"/>
+            <td><a th:href="@{/admin/{id}/edit(id=${user.id})}" th:text="Изменить"/></td>
+            <td><a th:href="@{/admin/{id}/delete(id=${user.id})}" th:text="Удалить"/></td>
+
+        </tr>
+    </th:block>
+</table>
+<br>
+<form th:action="@{/admin/new}"><input type="submit" value="Добавить пользователя"></form>
+
+
+<br>
+<form th:action="@{/user}"> <input th:type="submit" th:value="'Личная страница'"> </form>
+<br>
+<form th:action="@{/logout}"> <input th:type="submit" th:value="'Выйти из системы'"> </form>
+
+</body>
+</html>
