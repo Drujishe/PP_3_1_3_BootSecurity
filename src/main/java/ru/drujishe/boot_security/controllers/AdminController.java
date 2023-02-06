@@ -8,30 +8,32 @@ import ru.drujishe.boot_security.model.Person;
 import ru.drujishe.boot_security.model.Role;
 import ru.drujishe.boot_security.service.UserService;
 
+import java.security.Principal;
+
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public AdminController(UserService userService) {
         this.userService = userService;
     }
 
-    public AdminController() {
-    }
-
     @GetMapping
-    public String showUsers(Model model) {
+    public String showUsers(Principal principal, Model model) {
         model.addAttribute("users", userService.getAll());
+        model.addAttribute("person", userService.getPersonByUsername(principal.getName()));
+        model.addAttribute("roles",Role.getAllRoles());
         return "/admin/index";
     }
 
     @GetMapping(value = "/new")
-    public String createPage(Model model) {
+    public String createPage(Principal principal,Model model) {
         model.addAttribute("user", new Person());
+        model.addAttribute("person", userService.getPersonByUsername(principal.getName()));
         model.addAttribute("roles", Role.getAllRoles());
         return "/admin/new";
     }
@@ -42,15 +44,9 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("roles", Role.getAllRoles());
-        return "/admin/edit";
-    }
-
     @PostMapping("/{id}")
     public String update(@ModelAttribute("user") Person person, @PathVariable("id") long id) {
+        System.out.println(person);
         userService.update(id, person);
         return "redirect:/admin";
     }

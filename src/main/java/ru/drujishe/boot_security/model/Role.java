@@ -68,10 +68,18 @@ public class Role implements GrantedAuthority {
 
     public static List<Role> getAllRoles() {
         return Arrays.asList(
-                new Role(0, "ROLE_ADMIN"),
-                new Role(1, "ROLE_USER")
+                Admin(),
+                User()
 //                new Role(2, "ROLE_TEST")
         );
+    }
+
+    public static Role Admin() {
+        return new Role(0, "ROLE_ADMIN");
+    }
+
+    public static Role User() {
+        return new Role(1, "ROLE_USER");
     }
 
     @Override

@@ -3,6 +3,7 @@ package ru.drujishe.boot_security.model;
 
 import com.sun.istack.NotNull;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -137,11 +138,13 @@ public class Person implements UserDetails {
 
     @Override
     public String toString() {
-        return "MyUser{" +
+        return "Person{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';
     }
@@ -168,5 +171,22 @@ public class Person implements UserDetails {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         return this.hashCode() == obj.hashCode();
+    }
+
+    public String showRoles() {
+        StringBuilder builder = new StringBuilder();
+        roles.forEach(x -> builder.append(x.getRoleName()).append(", "));
+        builder.delete(builder.length() - 2, builder.length());
+        return roles.size() > 0 ? builder.toString() : "";
+    }
+    public Person getClone(Person person){
+        Person clone = null;
+        try {
+            clone = (Person) person.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("I AM CLONED");
+        return clone;
     }
 }

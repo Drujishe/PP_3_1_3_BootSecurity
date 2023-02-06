@@ -2,42 +2,138 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
     <title>Добавить пользователя</title>
+    <style>
+        td {
+            text-align: center;
+        }
+
+        th {
+            text-align: center;
+            background-color: lightblue;
+        }
+
+        label {
+            text-align: center;
+            align-items: center;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-<h2>Добавить нового пользователя</h2>
-<br>
 
-<form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
-    <input th:text="'Логин'" th:placeholder="'логин'" th:field="*{username}">
-    <br>
-    <input th:text="'Пароль'" th:placeholder="'пароль'" type="password" th:field="*{password}">
-    <br>
-    <input th:text="'Фамилия'" th:field="*{surname}">
-    <br>
-    <input th:text="'Имя'" th:field="*{name}">
-    <br>
-    <input th:text="'Возраст'" th:field="*{age}" type="number">
-    <br>
+<div class="container-fluid">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" th:href="@{#}" style="color: white"
+           th:text="'Пользователь ' + ${person.username} + ' в роли: ' + ${person.showRoles()}"></a>
+        <a th:href="@{/logout}" style="color: lightgray" th:text="'Выйти'"></a>
+    </nav>
 
-    <th:block th:each="role : ${roles}">
-        <br>
-        <input type="checkbox" name="roles"
-               th:text="${role.roleName}"
-               th:value="${role.roleId}"
-               th:field="*{roles}"
-        />
-    </th:block>
-    <br>
+    <div class="row">
+        <!-- НАВИГАЦИЯ СЛЕВА -->
+        <div class="col-2">
+            <div class="nav flex-column nav-pills pt-4" aria-orientation="vertical">
+                <a class="nav-link active" th:href="@{/admin}"> Admin</a>
+                <a class="nav-link" th:href="@{/user}"> User</a>
+            </div>
+        </div>
 
-    <input type="submit" value="Добавить">
-</form>
-<br>
-<form th:action="@{/user}"> <input th:type="submit" th:value="'Личная страница'"> </form>
-<br>
-<form th:action="@{/admin}"> <input th:type="submit" th:value="'Вернуться к списку пользователей'"> </form>
-<br>
-<form th:action="@{/logout}"> <input th:type="submit" th:value="'Выйти из системы'"> </form>
+        <!-- НАВИГАЦИЯ СПРАВА-->
+        <div class="col-10" style="background-color: #f7f7f7">
+            <div class="card-body">
+                <h1>Панель админа</h1>
+                <!-- НАВИГАЦИЯ -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/}" >Таблица пользователей</a>
+                    </li>
+                    <li class="nav-item" data-toggle="tab">
+                        <a class="nav-link active">Новый пользователь</a>
+                    </li>
+                </ul>
+                <!-- НОВЫЙ ПОЛЬЗОВАТЕЛЬ -->
+                <div class="card" id="newUser">
+                    <div class="card-header font-weight-bold">
+                        Добавить нового пользователя
+                    </div>
+                    <div class="card-body text-center col-6 mx-auto">
+                        <form role="form"
+                              th:method="POST"
+                              th:object="${user}"
+                              th:action="@{/admin/new}">
+                            <div class="form-group">
+                                <div class="font-weight-bold" for="surname">Фамилия</div>
+                                <input th:field="${user.surname}"
+                                       th:name="surname"
+                                       type="text" class="form-control"
+                                       id="surname"
+                                       placeholder="фамилия">
+                            </div>
+                            <div class="form-group">
+                                <div class="font-weight-bold" for="name">Имя</div>
+                                <input th:field="${user.name}"
+                                       th:name="name"
+                                       type="text" class="form-control" id="name"
+                                       placeholder="имя">
+                            </div>
+                            <div class="form-group">
+                                <div class="font-weight-bold" for="age">Возраст</div>
+                                <input th:field="${user.age}"
+                                       type="number" class="form-control" id="age"
+                                       placeholder="возраст">
+                            </div>
+                            <div class="form-group">
+                                <div class="font-weight-bold" for="username">Логин</div>
+                                <input th:field="${user.username}"
+                                       type="text" class="form-control"
+                                       id="username"
+                                       placeholder="логин">
+                            </div>
+                            <div class="form-group">
+                                <div class="font-weight-bold" for="password">Пароль</div>
+                                <input th:field="${user.password}"
+                                       type="password" class="form-control"
+                                       id="password" placeholder="пароль">
+                            </div>
+                            <div class="form-group">
+                                <div class="font-weight-bold" for="roles">Роли</div>
+                                <select multiple class="form-control form-control-sm" id="roles"
+                                        name="roles" size="2" required>
+                                    <option th:each="role: ${roles}"
+                                            th:value="${role.roleId}"
+                                            th:text="${role.roleName}">
+                                    </option>
+                                </select>
+                            </div>
+                            <!--                                КНОПКИ-->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success mx-auto"
+                                        th:text="'Добавить пользователя'">Save changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
